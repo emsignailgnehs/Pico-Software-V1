@@ -8,7 +8,7 @@ TODO:
 2. heuristic for finding tangent.
 3. ways to measure fitting error by the angle between tangent line and curve slope at contact point.
 update 6/9:
-change intercept to account for min(0,) in whole 
+change intercept to account for min(0,) in whole
 change peak finding prominence requirements.
 """
 
@@ -21,9 +21,9 @@ def smooth(x,windowlenth=11,window='hanning'):
 
 def intercept(x, x1, x2, whole=False):
     """
-    determine whether the line that cross x1 and x2 and x[x1],x[x2] will intercept x. 
-    if whole == False, will only consider one side. 
-    Only consider the direction from x2 -> x1, 
+    determine whether the line that cross x1 and x2 and x[x1],x[x2] will intercept x.
+    if whole == False, will only consider one side.
+    Only consider the direction from x2 -> x1,
     that is:
     if x1 > x2; consider the right side of x2
     if x1 < x2; consider the left side of x2
@@ -100,28 +100,49 @@ def myfitpeak(xydataIn):
     # heightlimit = np.absolute(y[0:-1] - y[1:]).mean() * 3
     # set height limit so that props return limits
     peaks, props = signal.find_peaks(
-        y, height=heightlimit, prominence=heightlimit, width=len(y) / 30, rel_height=0.5)
+        sy, height=heightlimit, prominence=heightlimit, width=len(sy) / 30, rel_height=0.5)
 
     # return if no peaks found.
     if len(peaks) == 0:
-        return x,y,0,0,0,0,0,-1
+        return x,sy,0,0,0,0,0,-1
 
-    peak = pickpeaks(peaks,props,len(y))
+    peak = pickpeaks(peaks,props,len(sy))
 
     # find tagent to 3X peak width window
-    x1,x2 = find_tangent(y,peak)
+    x1,x2 = find_tangent(sy,peak)
 
-    y1=y[x1]
-    y2=y[x2]
+    y1=sy[x1]
+    y2=sy[x2]
     k=(y2-y1)/(x2-x1)
     b = -k*x2 + y2
 
-    peakcurrent = y[peak] - (k*peak + b)
+    peakcurrent = sy[peak] - (k*peak + b)
     peakvoltage = x[peak]
 
     twopointx = np.array([x[x1],x[x2]])
-    twopointy = np.array([y[x1],y[x2]])
+    twopointy = np.array([sy[x1],sy[x2]])
 
     # for compatibility return the same length tuple of results.
     # currently, no error is calculated.
     return x,y,twopointx,twopointy,twopointy,peakcurrent,peakvoltage,0
+
+if __name__ == '__main__':
+    import pandas as pd
+    from matplotlib import pyplot as plt
+
+    cfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\30s delay_75Hz 25mA\30s delay_75Hz 25mA\WE1.csv'
+    pfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\30s delay_75Hz 25mA\30s delay_75Hz 25mA\WE1V.csv'
+    cdf = pd.read_csv(cfile, header = None).drop(columns= 5)
+    pdf = pd.read_csv(pfile, header = None).drop(columns= 5)
+
+    for i in range(len(pdf.columns)):
+        x = np.array(pdf[i])
+        y = np.array(cdf[i])
+        x,y,twopointx,twopointy,twopointy,peakcurrent,peakvoltage,err = myfitpeak(np.array([x, y]))
+        clr = ['red', 'orange', 'green', 'blue', 'magenta']
+        plt.plot(x, y, color = clr[i])
+        plt.plot(twopointx, twopointy, marker = 'x', linestyle = '--', color = clr[i])
+        vline_x = np.array([peakvoltage] * 2)
+        base_y = twopointy[0] + (twopointy[1] - twopointy[0])*(peakvoltage - twopointx[0])/(twopointx[1] - twopointx[0])
+        vline_y = np.array([base_y, base_y + peakcurrent])
+        plt.plot(vline_x, vline_y, color = clr[i])
