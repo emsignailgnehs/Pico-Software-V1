@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>"1" "C:\Users\\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\scripts" "Two Electrode Scan %28Alternating%29" "5" "False"</StartArguments>
+  </PropertyGroup>
+</Project>

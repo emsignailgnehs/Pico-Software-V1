@@ -1,0 +1,35 @@
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\LSV_on_10kOhm.txt
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhm.txt
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.exe.config
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.exe
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.pdb
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.csprojAssemblyReference.cache
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.csproj.CoreCompileInputs.cache
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.exe
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.pdb
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW2.txt
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW0.txt
+C:\Users\rup96\Downloads\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW1.txt
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\LSV_on_10kOhm.txt
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhm.txt
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW0.txt
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW1.txt
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW2.txt
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.exe.config
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.exe
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.pdb
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.csprojAssemblyReference.cache
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.exe
+C:\Users\aptitude3\Desktop\Pico Testing\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.pdb
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\LSV_on_10kOhm.txt
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhm.txt
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW0.txt
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW1.txt
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\SWV_on_10kOhmW2.txt
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.exe.config
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.exe
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\MSConsoleExample.pdb
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.csprojAssemblyReference.cache
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.exe
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\obj\Debug\MSConsoleExample.pdb
+C:\Users\aptitude3\Desktop\Tyler Desktop\Pico Software V1\MethodSCRIPTExamples_C#\MSConsoleExample\bin\Debug\scripts\FF.txt

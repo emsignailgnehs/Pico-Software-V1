@@ -1,0 +1,22 @@
+e
+var c
+var p
+var f
+var g
+set_pgstat_chan 0
+set_pgstat_mode 3
+set_max_bandwidth 800
+set_pot_range -200m 500m
+set_cr 7375n
+set_autoranging 590n 59u
+set_gpio 0
+cell_on
+meas_loop_swv p c f g -500m -100m 2m 50m 100
+pck_start
+pck_add p
+pck_add c
+pck_end
+endloop
+on_finished:
+cell_off
+
