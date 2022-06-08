@@ -89,11 +89,14 @@ def pickpeaks(peaks,props,totalpoints):
 def myfitpeak(xydataIn):
     x = xydataIn[0,:] #voltage
     y = xydataIn[1,:] #current
+    sy = smooth(y)
 
-    y = smooth(y)
+    noise = np.absolute(y - sy)
+
     # limit peak width to 1/50 of the totoal scan length to entire scan.
-    # limit minimum peak height to be over 0.2 percentile of all neighbors
-    heightlimit = np.quantile(np.absolute(y[0:-1] - y[1:]), 0.8) * 3
+    # limit minimum peak height to be over 0.05 percentile of all original - smoothed
+    heightlimit = np.quantile(noise, 0.95) * 3
+
     # heightlimit = np.absolute(y[0:-1] - y[1:]).mean() * 3
     # set height limit so that props return limits
     peaks, props = signal.find_peaks(
