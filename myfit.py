@@ -69,7 +69,10 @@ def find_tangent(x,center):
     return left,right
 
 def pickpeaks(peaks,props,totalpoints):
-    "the way to pick a peak"
+    """
+    The way to pick a peak
+    20220609: add a potential range for peak location 
+    """
     if len(peaks) == 1:
         return peaks[0]
     # scores = np.zeros(len(peaks))
@@ -90,6 +93,9 @@ def myfitpeak(xydataIn):
     x = xydataIn[0,:] #voltage
     y = xydataIn[1,:] #current
     sy = smooth(y)
+    prange_flag = ((x.min() + 0.025) < x)*((x.max() - 0.025) > x)
+    sy_for_fit = sy[prange_flag]
+    x_for_fit = x[prange_flag]
 
     noise = np.absolute(y - sy)
 
@@ -100,27 +106,27 @@ def myfitpeak(xydataIn):
     # heightlimit = np.absolute(y[0:-1] - y[1:]).mean() * 3
     # set height limit so that props return limits
     peaks, props = signal.find_peaks(
-        sy, height=heightlimit, prominence=heightlimit, width=len(sy) / 30, rel_height=0.5)
+        sy_for_fit, height=heightlimit, prominence=heightlimit, width=len(sy_for_fit) / 30, rel_height=0.5)
 
     # return if no peaks found.
     if len(peaks) == 0:
         return x,sy,0,0,0,0,0,-1
 
-    peak = pickpeaks(peaks,props,len(sy))
+    peak = pickpeaks(peaks,props,len(sy_for_fit))
 
     # find tagent to 3X peak width window
-    x1,x2 = find_tangent(sy,peak)
+    x1,x2 = find_tangent(sy_for_fit,peak)
 
-    y1=sy[x1]
-    y2=sy[x2]
+    y1=sy_for_fit[x1]
+    y2=sy_for_fit[x2]
     k=(y2-y1)/(x2-x1)
     b = -k*x2 + y2
 
-    peakcurrent = sy[peak] - (k*peak + b)
-    peakvoltage = x[peak]
+    peakcurrent = sy_for_fit[peak] - (k*peak + b)
+    peakvoltage = x_for_fit[peak]
 
-    twopointx = np.array([x[x1],x[x2]])
-    twopointy = np.array([sy[x1],sy[x2]])
+    twopointx = np.array([x_for_fit[x1],x_for_fit[x2]])
+    twopointy = np.array([sy_for_fit[x1],sy_for_fit[x2]])
 
     # for compatibility return the same length tuple of results.
     # currently, no error is calculated.
@@ -130,8 +136,8 @@ if __name__ == '__main__':
     import pandas as pd
     from matplotlib import pyplot as plt
 
-    cfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\30s delay_75Hz 25mA\30s delay_75Hz 25mA\WE1.csv'
-    pfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\30s delay_75Hz 25mA\30s delay_75Hz 25mA\WE1V.csv'
+    cfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\Ch 4_ForSheng\Ch 4\WE1.csv'
+    pfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\Ch 4_ForSheng\Ch 4\WE1V.csv'
     cdf = pd.read_csv(cfile, header = None).drop(columns= 5)
     pdf = pd.read_csv(pfile, header = None).drop(columns= 5)
 
@@ -146,3 +152,4 @@ if __name__ == '__main__':
         base_y = twopointy[0] + (twopointy[1] - twopointy[0])*(peakvoltage - twopointx[0])/(twopointx[1] - twopointx[0])
         vline_y = np.array([base_y, base_y + peakcurrent])
         plt.plot(vline_x, vline_y, color = clr[i])
+    plt.show()
