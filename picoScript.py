@@ -39,7 +39,7 @@ def script(numberOfPicos, filePath, electrodeOption, numberOfScans, FF):
     # CHANGE filePath TO THE FOLDER YOU WANT TO DROP THE RAW FILES 
     #filePath = "C:\\Users\\rup96\\Desktop\\peakProgram\\"
 
-    for i in range(1, int(numberOfPicos)):
+    for i in range(1, int(numberOfPicos)+1):
         # This path is for the .exe of the measurement code
         out = subprocess.Popen([exePath,str(i),filePath,electrodeOption, numberOfScans,FF])
         time.sleep(0.10)
