@@ -89,11 +89,11 @@ def pickpeaks(peaks,props,totalpoints):
     return   peaks[topick]
 
 
-def myfitpeak(xydataIn):
+def myfitpeak(xydataIn, truncate = 0.025):
     x = xydataIn[0,:] #voltage
     y = xydataIn[1,:] #current
     sy = smooth(y)
-    prange_flag = ((x.min() + 0.025) < x)*((x.max() - 0.025) > x)
+    prange_flag = ((x.min() + truncate) < x)*((x.max() - truncate) > x)
     sy_for_fit = sy[prange_flag]
     x_for_fit = x[prange_flag]
 
