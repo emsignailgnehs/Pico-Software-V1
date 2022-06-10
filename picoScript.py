@@ -76,7 +76,8 @@ def script(numberOfPicos, filePath, electrodeOption, numberOfScans, FF):
     print("Electrode option: " + electrodeOption)
     print("Number of Scans: " + numberOfScans)
     print("Analyzing Data...")
-    # Comment/uncomment out this for loop to disable/enable python peak detection 
+    # Comment/uncomment out this for loop to disable/enable python peak detection
+    cont_tasks = []
     for i in range(1,int(numberOfPicos)+1):
         if(electrodeOption == "Three Electrode Scan"):
             peakdetection.peakDetection(i,filePath,int(numberOfScans)) 
@@ -85,10 +86,14 @@ def script(numberOfPicos, filePath, electrodeOption, numberOfScans, FF):
         elif(electrodeOption == "One Electrode Scan"):
             peakdetectionOneElectrode.peakDetection(i,filePath,int(numberOfScans))
         elif(electrodeOption == "Continuous"):
-             outPeak = subprocess.Popen(["python","C:\\Users\\aptitude\Desktop\\Pico Software V1\\peakdetectionContinuous.py",str(i),filePath,numberOfScans])
+             cont_tasks.append(subprocess.Popen(["python","C:\\Users\\aptitude\Desktop\\Pico Software V1\\peakdetectionContinuous.py",str(i),filePath,numberOfScans]))
             #peakdetectionContinuous.peakDetection(i,filePath,int(numberOfScans))
-    if (electrodeOption=="Continuous"):
-        outPeak.wait()
+        if (electrodeOption=="Continuous"):
+            wait_proccesses_cont = [Process(target = wait_task, args = (cont_tasks[i], )) for i in range(1, int(numberOfPicos) + 1)]
+            for proc in wait_proccesses_cont:
+                proc.start()
+            for proc in wait_proccesses_cont:
+                proc.join()
     print("Finished!") 
     
     # Uncomment/comment below to enable/disable matlab peak detection.
