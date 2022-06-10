@@ -6,6 +6,7 @@ import peakdetectionTwoElectrode
 import time
 import asyncio
 import os
+from multiprocessing import Process
 '''
     This script will run the measurement .exe and plot via matlab.
 
@@ -33,26 +34,42 @@ import os
 #NOTE: If you want to make changes to measurement program then you must change in visual studio and run program
 #  (note: you do not have to perform an actual measurement just let the program run through to the end)
 #NOTE: before running the program open matlab and run command matlab.engine.shareEngine in matlab terminal
+
+def wait_task(task):
+    task.wait()
+
+def kill_task(task):
+    task.kill()
+
 def script(numberOfPicos, filePath, electrodeOption, numberOfScans, FF):
     # You will only change exePath during inital setup
     exePath = "C:\\Users\\aptitude\\Desktop\\Pico Software V1\\MethodSCRIPTExamples_C#\\MSConsoleExample\\bin\\Debug\\MSConsoleExample.exe"
     # CHANGE filePath TO THE FOLDER YOU WANT TO DROP THE RAW FILES 
     #filePath = "C:\\Users\\rup96\\Desktop\\peakProgram\\"
 
-    for i in range(1, int(numberOfPicos)+1):
+    tasks = []
+    for i in range(1, int(numberOfPicos) + 1):
         # This path is for the .exe of the measurement code
-        out = subprocess.Popen([exePath,str(i),filePath,electrodeOption, numberOfScans,FF])
+        tasks.append(subprocess.Popen([exePath,str(i),filePath,electrodeOption, numberOfScans,FF]))
         time.sleep(0.10)
-    output = subprocess.Popen([exePath,numberOfPicos,filePath,electrodeOption, numberOfScans,FF]) # last process to start (hopefully)
+    # output = subprocess.Popen([exePath,numberOfPicos,filePath,electrodeOption, numberOfScans,FF]) # last process to start (hopefully)
 
     # If continuous scan then we bypass waiting for all scans to finish so we can plot in realtime 
     if(not(electrodeOption=="Continuous")):
-        output.wait() # If any pico before the last pico finsihes this will prevent data extraction below. (normal)
-        output.kill()
-    if int(numberOfPicos)>1:
-        if(not(electrodeOption=="Continuous")):
-            out.wait() # If last pico finishes before any pico before it then this will prevent data extraction below until all picos are done.
-            out.kill()
+        wait_proccesses = [Process(target = wait_task, args = (tasks[i], )) for i in range(1, int(numberOfPicos) + 1)]
+        for proc in wait_proccesses:
+            proc.start()
+        for proc in wait_proccesses:
+            proc.join()
+        kill_proccesses = [Process(target = kill_task, args = (tasks[i], )) for i in range(1, int(numberOfPicos) + 1)]
+        for proc in kill_proccesses:
+            proc.start()
+        for proc in kill_proccesses:
+            proc.join()
+    # if int(numberOfPicos)>1:
+    #     if(not(electrodeOption=="Continuous")):
+    #         out.wait() # If last pico finishes before any pico before it then this will prevent data extraction below until all picos are done.
+    #         out.kill()
 
     #time.sleep(1) #not sure if i need this right now. added in for continuous scan
     
