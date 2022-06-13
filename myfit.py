@@ -71,7 +71,7 @@ def find_tangent(x,center):
 def pickpeaks(peaks,props,totalpoints):
     """
     The way to pick a peak
-    20220609: add a potential range for peak location 
+    20220609: add a potential range for peak location
     """
     if len(peaks) == 1:
         return peaks[0]
