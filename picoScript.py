@@ -55,17 +55,21 @@ def script(numberOfPicos, filePath, electrodeOption, numberOfScans, FF):
     # output = subprocess.Popen([exePath,numberOfPicos,filePath,electrodeOption, numberOfScans,FF]) # last process to start (hopefully)
 
     # If continuous scan then we bypass waiting for all scans to finish so we can plot in realtime 
+    print('Initiating pico tasks...')
     if(not(electrodeOption=="Continuous")):
         wait_proccesses = [Process(target = wait_task, args = (tasks[i], )) for i in range(1, int(numberOfPicos) + 1)]
         for proc in wait_proccesses:
             proc.start()
         for proc in wait_proccesses:
             proc.join()
+        print('Finished pico tasks!')
         kill_proccesses = [Process(target = kill_task, args = (tasks[i], )) for i in range(1, int(numberOfPicos) + 1)]
+        print('Terminating pico tasks...')
         for proc in kill_proccesses:
             proc.start()
         for proc in kill_proccesses:
             proc.join()
+        print('Teminated pico tasks!')
     # if int(numberOfPicos)>1:
     #     if(not(electrodeOption=="Continuous")):
     #         out.wait() # If last pico finishes before any pico before it then this will prevent data extraction below until all picos are done.
