@@ -5,27 +5,55 @@ from tkinter import Checkbutton
 import picoScript
 import threading
 from threading import Thread
+import GUIconfig
+from pathlib import Path
     
+root_folder = Path(__file__).parent.absolute()
 class Root(Tk):
 
     def __init__(self):
         super(Root, self).__init__()
         self.title("Python Tkinter Dialog Widget")
         self.minsize(640, 400)
+        self.config = GUIconfig.load_dict(f'{root_folder}/config.json')
  
         # Create frames and place grids for labels and entries
         self.gridLayout()
 
         self.labelFrame = LabelFrame(self, text = "Open File")
-        self.labelFrame.grid(column = 1, row = 7, padx = 20, pady = 20)
+        self.labelFrame.grid(column = 1, row = 9, padx = 20, pady = 20)
         self.button()
         
         self.electrodeOption()
         self.scans()
         self.fluidFillButton()
- 
-    def gridLayout(self):
+    
+    def load_config(self):
+        filename = filedialog.askopenfilename(initialdir = root_folder, title = 'Select the ".json" config file', filetype = [('json file', '*.json')])
+        self.config = GUIconfig.load_dict(filename)
+        self.update_fields()
 
+    def save_config(self):
+        savename = filedialog.asksaveasfilename(initialdir = root_folder, title = 'Save the config as json file', filetype = [('json file', '*.json')])
+        savename = savename.replace('.json', '') + '.json'
+        GUIconfig.save_dict(savename, self.config)
+
+    def update_fields(self):
+        self.E1.delete(0, END)
+        self.E2.delete(0, END)
+        self.E3.delete(0, END)
+        self.E4.delete(0, END)
+        self.E5.delete(0, END)
+        self.E6.delete(0, END)
+
+        self.E1.insert(0, self.config["t equilibration"])
+        self.E2.insert(0, self.config["E begin"])
+        self.E3.insert(0, self.config["E end"])
+        self.E4.insert(0, self.config["E step"])
+        self.E5.insert(0, self.config["Amplitude"])
+        self.E6.insert(0, self.config["Frequency"])
+    
+    def gridLayout(self):
         # Create each label and entry we want
         self.L1 = Label(self, text="t equilibration")
         self.L1.grid(row=0, sticky="E")
@@ -61,6 +89,12 @@ class Root(Tk):
         self.btn = Button(self,text="Write File!", command=self.writeFile)
         self.btn.grid(column=0, row=6, columnspan=2)
 
+        self.update_btn = Button(self,text="Load Config", command=self.load_config)
+        self.update_btn.grid(column=0, row=7, columnspan=2)
+
+        self.saveconfig_btn = Button(self,text="Save Config", command=self.save_config)
+        self.saveconfig_btn.grid(column=0, row=8, columnspan=2)
+
         self.L7 = Label(self, text="Enter Number of Picos")
         self.L7.grid(row=6,column=2, sticky="NSWE")
         self.PicoNumber = Entry(self, bd=5)
@@ -71,7 +105,7 @@ class Root(Tk):
         self.filepath,self.var.get(),self.numberOfScans.get(),self.FFVar.get()),height = 1, width = 10)
         self.Run.grid(column=4,row=6,columnspan=2)
 
-        
+        self.update_fields()     
  
     def button(self):
         self.button = Button(self.labelFrame, text = "Browse Directory",command = self.fileDialog)
@@ -95,7 +129,6 @@ class Root(Tk):
     def fluidFillButton(self):
         self.FFVar = BooleanVar()
         self.FFButton = Checkbutton(self, text="9 Chip Fluid Fill", variable=self.FFVar).grid(column=2,row=3, sticky=W)
-        
 
     def fileDialog(self):
         self.filepath = filedialog.askdirectory(title = "Select A Directory")
@@ -175,8 +208,8 @@ class Root(Tk):
         return pr
     
     def runScript(self, numberOfPicos, filepath, electrodeOption, numberOfScans,FF):
+        self.config = GUIconfig.save_dict(f'{root_folder}/config.json')
         picoScript.script(numberOfPicos,filepath+"/",electrodeOption,numberOfScans,str(FF))
 
 root = Root()
 root.mainloop()
-
