@@ -208,7 +208,7 @@ class Root(Tk):
         return pr
     
     def runScript(self, numberOfPicos, filepath, electrodeOption, numberOfScans,FF):
-        self.config = GUIconfig.save_dict(f'{root_folder}/config.json')
+        self.config = GUIconfig.save_dict(f'{root_folder}/config.json', self.config)
         picoScript.script(numberOfPicos,filepath+"/",electrodeOption,numberOfScans,str(FF))
 
 root = Root()
