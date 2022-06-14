@@ -89,7 +89,7 @@ def pickpeaks(peaks,props,totalpoints):
     return   peaks[topick]
 
 
-def myfitpeak(xydataIn, truncate = 0.025):
+def myfitpeak(xydataIn, truncate = 0.1, rel_h = 0.5):
     x = xydataIn[0,:] #voltage
     y = xydataIn[1,:] #current
     sy = smooth(y)
@@ -101,16 +101,16 @@ def myfitpeak(xydataIn, truncate = 0.025):
 
     # limit peak width to 1/50 of the totoal scan length to entire scan.
     # limit minimum peak height to be over 0.05 percentile of all original - smoothed
-    heightlimit = np.quantile(noise, 0.95) * 3
+    heightlimit = np.quantile(noise[prange_flag], 0.95) * 3
 
     # heightlimit = np.absolute(y[0:-1] - y[1:]).mean() * 3
     # set height limit so that props return limits
     peaks, props = signal.find_peaks(
-        sy_for_fit, height=heightlimit, prominence=heightlimit, width=len(sy_for_fit) / 30, rel_height=0.5)
+        sy_for_fit, height=heightlimit, prominence=heightlimit, width=3, rel_height= rel_h)
 
     # return if no peaks found.
     if len(peaks) == 0:
-        return x,sy,0,0,0,0,0,-1
+        return x,sy,0,0,0,0,0,heightlimit
 
     peak = pickpeaks(peaks,props,len(sy_for_fit))
 
@@ -130,26 +130,62 @@ def myfitpeak(xydataIn, truncate = 0.025):
 
     # for compatibility return the same length tuple of results.
     # currently, no error is calculated.
-    return x,y,twopointx,twopointy,twopointy,peakcurrent,peakvoltage,0
+    return x,y,twopointx,twopointy,twopointy,peakcurrent,peakvoltage,heightlimit
 
 if __name__ == '__main__':
     import pandas as pd
     from matplotlib import pyplot as plt
 
-    cfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\Ch 4_ForSheng\Ch 4\WE1.csv'
-    pfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\Pico Software V1\test\Ch 4_ForSheng\Ch 4\WE1V.csv'
+    cfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\PicoSoftwareV1\test\Test_3\Test\WE3.csv'
+    pfile = r'C:\Users\Public\Documents\SynologyDrive\Users\Sheng\SideProjects\PicoSoftwareV1\test\Test_3\Test\WE3V.csv'
     cdf = pd.read_csv(cfile, header = None).drop(columns= 5)
     pdf = pd.read_csv(pfile, header = None).drop(columns= 5)
+
+    truncate = 0.05
+    relative_height = 0.5
 
     for i in range(len(pdf.columns)):
         x = np.array(pdf[i])
         y = np.array(cdf[i])
-        x,y,twopointx,twopointy,twopointy,peakcurrent,peakvoltage,err = myfitpeak(np.array([x, y]))
+        x,y,twopointx,twopointy,twopointy,peakcurrent,peakvoltage,heightlimit = myfitpeak(np.array([x, y]), truncate = truncate)
+        print(f'peakcurrent:{peakcurrent};\nheightlimit:{heightlimit}\n' + '='*20)
         clr = ['red', 'orange', 'green', 'blue', 'magenta']
-        plt.plot(x, y, color = clr[i])
+        plt.plot(x, y, color = clr[i], label = f'{i}th scan, pc= {round(peakcurrent*1e9, 2)} nA')
         plt.plot(twopointx, twopointy, marker = 'x', linestyle = '--', color = clr[i])
-        vline_x = np.array([peakvoltage] * 2)
-        base_y = twopointy[0] + (twopointy[1] - twopointy[0])*(peakvoltage - twopointx[0])/(twopointx[1] - twopointx[0])
-        vline_y = np.array([base_y, base_y + peakcurrent])
-        plt.plot(vline_x, vline_y, color = clr[i])
+        plt.ylim(np.array([2.5, 4.5])*1e-6)
+        try:
+            vline_x = np.array([peakvoltage] * 2)
+            base_y = twopointy[0] + (twopointy[1] - twopointy[0])*(peakvoltage - twopointx[0])/(twopointx[1] - twopointx[0])
+            vline_y = np.array([base_y, base_y + peakcurrent])
+            plt.plot(vline_x, vline_y, color = clr[i])
+        except:
+            pass
+    plt.legend()
     plt.show()
+
+    for i in range(len(pdf.columns)):
+        x = np.array(pdf[i])
+        y = np.array(cdf[i])
+        sy = smooth(y)
+        prange_flag = ((x.min() + truncate) < x)*((x.max() - truncate) > x)
+        sy_for_fit = sy[prange_flag]
+        x_for_fit = x[prange_flag]
+
+        noise = np.absolute(y - sy)
+
+        # plt.plot(x, noise)
+
+        heightlimit = np.quantile(noise, 0.95) * 2
+
+        # plt.plot(x, y)
+        # plt.plot(x, sy)
+        # plt.axhline(heightlimit + sy.min(), color = 'black', linestyle = '--')
+        # plt.axhline(sy.min(), color = 'black', linestyle = '--')
+
+        plt.plot(x, noise*1e9)
+        plt.title(f'Noise of {i}th scan')
+        plt.ylim([0, 50])
+        plt.xlabel('E(V) vs Ag/AgCl')
+        plt.ylabel('Current (nA)')
+        plt.legend()
+        plt.show()
