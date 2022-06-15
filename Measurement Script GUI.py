@@ -128,6 +128,7 @@ class Root(Tk):
 
     def fluidFillButton(self):
         self.FFVar = BooleanVar()
+        self.FFVar.set(True)
         self.FFButton = Checkbutton(self, text="9 Chip Fluid Fill", variable=self.FFVar).grid(column=2,row=3, sticky=W)
 
     def fileDialog(self):
