@@ -6,7 +6,10 @@ def save_dict(filepath, dict):
         json.dump(dict, f)
 
 def load_dict(filepath):
-    return json.loads(open(filepath).read())
+    try:
+        return json.loads(open(filepath).read())
+    except:
+        return None
 
 if __name__ == '__main__':
     path = Path(__file__).parent.absolute()

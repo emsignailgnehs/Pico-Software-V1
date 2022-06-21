@@ -16,6 +16,8 @@ class Root(Tk):
         self.title("Python Tkinter Dialog Widget")
         self.minsize(640, 400)
         self.config = GUIconfig.load_dict(f'{root_folder}/config.json')
+        if not self.config:
+            self.config = {"t equilibration": 0, "E begin": 0, "E end": -600, "E step": 10, "Amplitude": 10, "Frequency": 100}
  
         # Create frames and place grids for labels and entries
         self.gridLayout()
@@ -40,6 +42,7 @@ class Root(Tk):
 
     def update_fields(self):
         self.E1.delete(0, END)
+        self.E1b.delete(0, END)
         self.E2.delete(0, END)
         self.E3.delete(0, END)
         self.E4.delete(0, END)
@@ -47,6 +50,7 @@ class Root(Tk):
         self.E6.delete(0, END)
 
         self.E1.insert(0, self.config["t equilibration"])
+        self.E1b.insert(0, self.config["E begin"])
         self.E2.insert(0, self.config["E begin"])
         self.E3.insert(0, self.config["E end"])
         self.E4.insert(0, self.config["E step"])
@@ -59,6 +63,11 @@ class Root(Tk):
         self.L1.grid(row=0, sticky="E")
         self.E1 = Entry(self, bd =5)
         self.E1.grid(column=1, row=0)
+
+        self.L1b = Label(self, text="E equilibration")
+        self.L1b.grid(column=2, row=0, sticky="E")
+        self.E1b = Entry(self, bd =5)
+        self.E1b.grid(column=3, row=0)
 
         self.L2 = Label(self, text="E begin")
         self.L2.grid(row=1, sticky="E")
@@ -146,6 +155,8 @@ class Root(Tk):
             pr = "set_pot_range " + self.pot_range_helper(int(self.E2.get()),int(self.E3.get()),int(self.E5.get())) #potential range
             cr = "set_cr 7375n" #current range set to default
             ar = "set_autoranging 7375n 7375n" #autoranging set to defualt
+            E_eq = f'set_e {self.E1b.get()}m'
+            t_eq = f'wait {self.E1.get()}'
             cell_on = "cell_on"
 
             measurementSeq = "meas_loop_swv p c f g " + self.E2.get() +"m " + self.E3.get() + "m " + self.E4.get() + "m " \
@@ -175,7 +186,15 @@ class Root(Tk):
                 else:
                     gpioCFG = "set_gpio_cfg 96 1\nset_gpio 64i" #WE2
                 
-                body = [bw+"\n",pr+"\n",cr+"\n",ar+"\n",gpioCFG+"\n",cell_on+"\n", measurementSeq+"\n"]
+                body = [bw+"\n",
+                        pr+"\n",
+                        cr+"\n",
+                        ar+"\n",
+                        gpioCFG+"\n",
+                        E_eq+"\n",
+                        cell_on+"\n",
+                        t_eq+"\n",
+                        measurementSeq+"\n"]
 
                 file1.writelines(header)
                 file1.writelines(body)

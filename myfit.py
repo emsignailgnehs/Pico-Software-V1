@@ -163,32 +163,29 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-for i in range(len(pdf.columns)):
-    x = np.array(pdf[i])
-    y = np.array(cdf[i])
-    sy = smooth(y)
-    prange_flag = ((x.min() + truncate) < x)*((x.max() - truncate) > x)
-    sy_for_fit = sy[prange_flag]
-    x_for_fit = x[prange_flag]
+    for i in range(len(pdf.columns)):
+        x = np.array(pdf[i])
+        y = np.array(cdf[i])
+        sy = smooth(y)
+        prange_flag = ((x.min() + truncate) < x)*((x.max() - truncate) > x)
+        sy_for_fit = sy[prange_flag]
+        x_for_fit = x[prange_flag]
 
-    noise = np.absolute(y - sy)
+        noise = np.absolute(y - sy)
 
-    # plt.plot(x, noise)
+        # plt.plot(x, noise)
 
-    heightlimit = np.quantile(noise, 0.95) * 2
+        heightlimit = np.quantile(noise, 0.95) * 2
 
-    # plt.plot(x, y)
-    # plt.plot(x, sy)
-    # plt.axhline(heightlimit + sy.min(), color = 'black', linestyle = '--')
-    # plt.axhline(sy.min(), color = 'black', linestyle = '--')
+        # plt.plot(x, y)
+        # plt.plot(x, sy)
+        # plt.axhline(heightlimit + sy.min(), color = 'black', linestyle = '--')
+        # plt.axhline(sy.min(), color = 'black', linestyle = '--')
 
-    plt.plot(x[30:], (noise[30:]*1e9)**2)
-    plt.title(f'Noise of {i}th scan')
-    # plt.ylim([0, 50])
-    plt.xlabel('E(V) vs Ag/AgCl')
-    plt.ylabel('Current (nA)')
-    plt.legend()
-    plt.show()
-
-
-heightlimit
+        plt.plot(x[30:], (noise[30:]*1e9)**2)
+        plt.title(f'Noise of {i}th scan')
+        # plt.ylim([0, 50])
+        plt.xlabel('E(V) vs Ag/AgCl')
+        plt.ylabel('Current (nA)')
+        plt.legend()
+        plt.show()
